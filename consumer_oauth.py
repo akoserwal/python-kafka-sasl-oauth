@@ -83,7 +83,6 @@ def _get_token(args, config):
                          auth=(args.client_id, args.client_secret),
                          data=payload)
     token = resp.json()
-    print(token)
     return token['access_token'], time.time() + float(token['expires_in'])
 
 

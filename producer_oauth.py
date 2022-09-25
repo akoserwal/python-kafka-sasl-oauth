@@ -84,7 +84,6 @@ def _get_token(args, config):
                          auth=(args.client_id, args.client_secret),
                          data=payload)
     token = resp.json()
-    print(token)
     return token['access_token'], time.time() + float(token['expires_in'])
 
 
@@ -153,8 +152,8 @@ def main(args):
       "required": [ "name", "favorite_number", "favorite_color" ]
     }
     """
-    s = args.client_id+':'+args.client_secret
-    schema_registry_conf = {'url': args.schema_registry, 'basic.auth.user.info': s}
+    schema_auth = args.client_id+':'+args.client_secret
+    schema_registry_conf = {'url': args.schema_registry, 'basic.auth.user.info': schema_auth}
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 
     json_serializer = JSONSerializer(schema_str, schema_registry_client, user_to_dict)
@@ -172,8 +171,8 @@ def main(args):
         try:
             user_name = fake.name()
             user_address = fake.address()
-            user_favorite_number = int(1)
-            user_favorite_color = "blue"
+            user_favorite_number = fake.pyint()
+            user_favorite_color = fake.color_name()
             user = User(name=user_name,
                         address=user_address,
                         favorite_color=user_favorite_color,

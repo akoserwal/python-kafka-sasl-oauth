@@ -206,6 +206,4 @@ if __name__ == '__main__':
                         help="Scopes requested from OAuth server.")
     parser.add_argument('-g', dest="group", default="example_serde_protobuf",
                         help="Consumer group")
-    parser.add_argument('-s', dest="schema_registry", required=True,
-                        help="Schema Registry (http(s)://host[:port]")
     main(parser.parse_args())

@@ -77,7 +77,7 @@ docker build -f Dockerfile.producer -t producer_py --rm .
 docker build -f Dockerfile.consumer -t consumer_py --rm .
 ```
 ```
-docker run -it --name producer_py --rm producer_py -b $bootstrap_url --token-url $token_url --client $service_account_client_id --secret $service_account_secret --scopes api.iam.service_accounts -t $topic -g $consumer_group -s $registryschema
+docker run -it --name producer_py --rm producer_py --b $bootstrap_url --token-url $token_url --client $service_account_client_id --secret $service_account_secret --scopes api.iam.service_accounts -t $topic -s $registryschema
 ```
 ```
 docker run -it --name consumer_py --rm consumer_py -b $bootstrap_url --token-url $token_url --client $service_account_client_id --secret $service_account_secret --scopes api.iam.service_accounts -t $topic -g $consumer_group -s $registryschema

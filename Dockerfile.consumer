@@ -1,0 +1,34 @@
+FROM alpine:3.15
+
+ENV LIBRDKAFKA_VERSION v1.9.2
+
+ENV BUILD_DEPS git make gcc g++ curl pkgconfig bsd-compat-headers zlib-dev openssl-dev cyrus-sasl-dev curl-dev zstd-dev yajl-dev libxml2-dev libxslt-dev python3-dev 
+
+ENV RUN_DEPS bash libcurl cyrus-sasl-gssapiv2 ca-certificates libsasl heimdal-libs krb5 zstd-libs zstd-static yajl python3 libxml2-dev libxslt-dev py3-pip
+RUN \
+    apk update && \
+    apk add --no-cache --virtual .dev_pkgs $BUILD_DEPS $BUILD_DEPS_EXTRA && \
+    apk add --no-cache $RUN_DEPS $RUN_DEPS_EXTRA
+
+RUN \
+    echo Installing librdkafka && \
+    mkdir -p /usr/src/librdkafka && \
+    cd /usr/src/librdkafka && \
+    curl -LfsS https://github.com/edenhill/librdkafka/archive/${LIBRDKAFKA_VERSION}.tar.gz | \
+        tar xvzf - --strip-components=1 && \
+    ./configure --prefix=/usr --disable-lz4-ext && \
+    make -j && \
+    make install && \
+    cd / && \
+    rm -rf /usr/src/librdkafka
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY requirements.txt /usr/src/app/
+RUN pip install tld --ignore-installed six
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+ENTRYPOINT ["python3", "consumer_oauth.py"]

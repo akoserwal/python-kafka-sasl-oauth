@@ -9,28 +9,20 @@ Get developer instance in few minutes
 
 
 # Setup
-```bash
-python3 -m pip install confluent-kafka
-or
-pip3 install confluent-kafka
-```
-
-Additional
-
-```
-pip3 install jsonschema
-pip3 install schema_registry
-pip3 install Faker
-```
-
 
 ``` 
-brew install librdkafka
+brew install librdkafka // for mac users
 
 or
 
 https://github.com/edenhill/librdkafka
 ```
+
+```
+ pip install --no-cache-dir -r requirements.txt
+```
+
+
 Set in .zshrc or bash_profile (For Mac OS)
 ```
 export C_INCLUDE_PATH=/opt/homebrew/include
@@ -77,3 +69,16 @@ python producer_oauth.py -b $bootstrap_url --token-url $token_url --client $serv
 python consumer_oauth.py -b $bootstrap_url --token-url $token_url --client $service_account_client_id --secret $service_account_secret --scopes api.iam.service_accounts -t $topic -g $consumer_group -s $registryschema
 ```
 
+# Docker
+```
+docker build -f Dockerfile.producer -t producer_py --rm .
+``` 
+```
+docker build -f Dockerfile.consumer -t consumer_py --rm .
+```
+```
+docker run -it --name producer_py --rm producer_py -b $bootstrap_url --token-url $token_url --client $service_account_client_id --secret $service_account_secret --scopes api.iam.service_accounts -t $topic -g $consumer_group -s $registryschema
+```
+```
+docker run -it --name consumer_py --rm consumer_py -b $bootstrap_url --token-url $token_url --client $service_account_client_id --secret $service_account_secret --scopes api.iam.service_accounts -t $topic -g $consumer_group -s $registryschema
+```
